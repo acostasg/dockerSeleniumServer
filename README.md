@@ -16,13 +16,7 @@ The image is build with the following dependencies:
 - Xvfb and the python wrapper - pyvirtualdisplay
 
 
-### Running:
-
-- docker
-    ```
-    docker build -t selenium_docker .
-    docker run --privileged -p 4000:4000 -d -it selenium_docker 
-    ```
+### Running selenium in the server machine:
 
 - docker-compose
 
@@ -30,8 +24,52 @@ The image is build with the following dependencies:
     docker-compose stop && docker-compose build && docker-compose up -d
     ```
     
+### Example python connect remote
+
+```python
+# To install the Python client library:
+# pip install -U selenium
+
+from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+import csv
+
+# Firefox 
+driver = webdriver.Remote(
+   command_executor='http://<IP-MACHINE-SERVER>:4000/wd/hub',
+   desired_capabilities=DesiredCapabilities.CHROME)
+
+# ------------------------------
+# Go to codepad.org
+driver.get('http://codepad.org')
+
+# Select the Python language option
+python_link = driver.find_elements_by_xpath("//input[@name='lang' and @value='Python']")[0]
+python_link.click()
+
+# Enter some text!
+text_area = driver.find_element_by_id('textarea')
+text_area.send_keys("print 'Hello,' + ' World!'")
+
+# Submit the form!
+submit_button = driver.find_element_by_name('submit')
+submit_button.click()
+
+# Make this an actual test. Isn't Python beautiful?
+assert "Hello, World!" in driver.get_page_source()
+
+#save csv
+with open('c:/dataset.csv', 'wb') as csvfile: #save in your local machine exection
+    spamwriter = csv.writer(csvfile, delimiter=' ',
+                            quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    spamwriter.writerow(['Spam'] * 5 + ['Baked Beans'])
+    spamwriter.writerow(['Spam', 'Lovely Spam', 'Wonderful Spam'])
+
+# Close the browser!
+driver.quit()
+```
     
-### Example
+### Example python inside the server
 
 ```python
 from pyvirtualdisplay import Display
