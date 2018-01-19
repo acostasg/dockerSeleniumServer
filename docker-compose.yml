@@ -1,5 +1,22 @@
-selenium:
-    build: .
-    ports:
-        - 4000:4000
-    privileged: true
+selenium-hub:
+  image: selenium/hub
+  ports:
+  - 4444:4444
+
+chrome:
+  image: selenium/node-chrome
+  links:
+  - selenium-hub:hub
+  volumes:
+  - /dev/shm:/dev/shm
+  - ./Downloads:/tmp/datasets
+
+firefox:
+  image: selenium/node-firefox
+  environment:
+    HUB_PORT_4444_TCP_ADDR: hub
+  links:
+  - selenium-hub:hub
+  volumes:
+  - /dev/shm:/dev/shm
+  - ./Downloads:/tmp/datasets

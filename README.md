@@ -23,7 +23,14 @@ The image is build with the following dependencies:
     ```
     docker-compose stop && docker-compose build && docker-compose up -d
     ```
-    
+- scaling-nodes
+    ```
+    docker-compose scale chrome=5
+    ```
+    or
+    ```
+    docker-compose scale firefox=5
+    ```
 ### Example python connect remote
 
 ```python
